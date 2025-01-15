@@ -3,6 +3,7 @@ import { Element } from './components/Element';
 import stone from './assets/stone.png';
 import scissor from './assets/scissor.png';
 import paper from './assets/tissue-roll.png';
+import conffeti from 'canvas-confetti';
 
 function App() {
   const [userOption, setUserOption] = useState(null);  // Opción seleccionada por el usuario
@@ -25,38 +26,33 @@ function App() {
   };
 
   const determineWinner = () => {
-    console.log('userOption:', userOption);
-    console.log('mach:', machineOption);
-    if (userOption === machineOption) {
-      setResult('Es un empate');
+    const normalizedUserOption = userOption % 3 || 3; // Convierte 4 -> 1, 5 -> 2, 6 -> 3
+  
+    if (normalizedUserOption === machineOption) {
+      setResult('Es un empate :/');
     } else if (
-      (userOption === 4 && machineOption === 2) ||  // Piedra vence a Tijera
-      (userOption === 5 && machineOption === 3) ||  // Tijera vence a Papel
-      (userOption === 6 && machineOption === 1)     // Papel vence a Piedra
+      (normalizedUserOption === 1 && machineOption === 2) || // Piedra vence a Tijera
+      (normalizedUserOption === 2 && machineOption === 3) || // Tijera vence a Papel
+      (normalizedUserOption === 3 && machineOption === 1)    // Papel vence a Piedra
     ) {
-      setResult('¡Ganaste!');
+      setResult('¡Ganaste! :)');
+      conffeti()
     } else {
-      setResult('¡Perdiste!');
+      setResult('¡Perdiste! :(');
     }
   };
-  
 
   useEffect(() => {
+    console.log(result);
     if (isGameActive && userOption !== null) {
       const countdownTimer = setInterval(() => {
         setCountdown((prevCountdown) => {
           if (prevCountdown <= 1) {
             clearInterval(countdownTimer);
-            
-            // Selección aleatoria de la máquina después de que termine el contador
-            const randomChoice = Math.floor(Math.random() * 3) + 1;
-            setMachineOption(randomChoice);  // Asigna la opción aleatoria
   
-            // Espera a que machineOption tenga un valor para determinar el ganador
-            setTimeout(() => {
-              determineWinner();
-            }, 100); // Pequeña demora para asegurar que la máquina haya seleccionado su opción
-            
+            // Selección aleatoria de la máquina
+            const randomChoice = Math.floor(Math.random() * 3) + 1;
+            setMachineOption(randomChoice); // Esto activará otro useEffect para determinar el ganador
           }
           return prevCountdown - 1;
         });
@@ -65,6 +61,13 @@ function App() {
       return () => clearInterval(countdownTimer);
     }
   }, [isGameActive, userOption]);
+  
+  useEffect(() => {
+    if (userOption !== null && machineOption !== null) {
+      determineWinner();
+    }
+  }, [machineOption]); // Se ejecutará cuando machineOption cambie
+  
   
   
 
@@ -95,9 +98,11 @@ function App() {
             </Element>
           </div>
 
-          <div className='timer permanent-marker'>
-            {result ? (
-              <div className="result-container">
+          <div className='timer permanent-marker nashei'>
+            {!userOption ? ( // Si el usuario no ha seleccionado una opción
+              <span>Seleccione una opción</span>
+            ) : result ? (
+              <div className={`result-container ${result === 'Es un empate' ? 'neutral' : result === '¡Ganaste!' ? 'success' : 'failure'}`}>
                 <span>{result}</span>
                 <button onClick={resetGame}>Jugar de nuevo</button>
               </div>
@@ -107,16 +112,31 @@ function App() {
           </div>
 
           <div className='option-user letter-hidden'>
-            <Element id="4" className="element user" setOption={handleUserSelect} userOption={userOption}>
+            <Element
+              id="4"
+              className={`element user ${isGameActive ? 'no-hover' : ''}`}
+              setOption={handleUserSelect}
+              userOption={userOption}
+            >
               <img className="img" src={stone} alt="Piedra" />
             </Element>
-            <Element id="5" className="element user" setOption={handleUserSelect} userOption={userOption}>
+            <Element
+              id="5"
+              className={`element user ${isGameActive ? 'no-hover' : ''}`}
+              setOption={handleUserSelect}
+              userOption={userOption}
+            >
               <img className="img" src={scissor} alt="Tijera" />
             </Element>
-            <Element id="6" className="element user" setOption={handleUserSelect} userOption={userOption}>
+            <Element
+              id="6"
+              className={`element user ${isGameActive ? 'no-hover' : ''}`}
+              setOption={handleUserSelect}
+              userOption={userOption}
+            >
               <img className="img" src={paper} alt="Papel" />
             </Element>
-          </div>
+          </div>  
         </section>
       </main>
 

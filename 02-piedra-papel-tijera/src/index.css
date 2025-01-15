@@ -30,6 +30,11 @@ footer {
   font-weight: 400;
 }
 
+.nashei {
+  max-height: 43.64px;
+  max-width: 1000px;
+}
+
 .element {
   width: 150px;
   height: 150px;
@@ -50,11 +55,11 @@ footer {
 }
 
 .option-machine {
-  margin-bottom: 50px;
+  margin-bottom: 40px;
 }
 
 .option-user {
-  margin-top: 50px;
+  margin-top: 40px;
 }
 
 .title {
@@ -81,8 +86,9 @@ footer {
 
 /* Resaltar la opción seleccionada por la máquina */
 .machine.active {
-  border-color: green;  /* Resalta la opción de la máquina en verde */
-  transform: scale(1.1);  /* Aumenta el tamaño de la opción seleccionada */
+  border-color: red;  /* Resalta la opción de la máquina en verde */
+  border-width: 5px;
+  transform: scale(1.2);  /* Aumenta el tamaño de la opción seleccionada */
 }
 
 .machine {
@@ -95,6 +101,7 @@ footer {
 
 .selected {
   border-color: yellow; /* Resalta con un borde amarillo */
+  border-width: 5px;
   transform: scale(1.2); /* Aumenta el tamaño de la opción seleccionada */
 }
 
@@ -111,10 +118,11 @@ footer {
   display: flex;
   align-items: center;
   font-size: 24px;
-  color: yellow;
+  color: #fff;
 }
 
 .result-container button {
+  font-family: 'Permanent Marker', serif;
   margin-left: 10px;
   padding: 10px 20px;
   font-size: 18px;
@@ -123,8 +131,32 @@ footer {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  height: 50px;
 }
 
-.result-container button:hover {
+.result-container button:hover {  
   background-color: #218838;
+}
+
+.element.user:hover {
+  transform: scale(1.1); /* Efecto de hover */
+  transition: transform 0.2s;
+}
+
+.element.user.no-hover:hover {
+  transform: none; /* Desactiva el efecto de hover */
+  cursor: default; /* Opcional: cambia el cursor */
+  border: solid 2px #fff;
+}
+
+.result-container {
+  text-align: center;
+  font-size: 1.5rem;
+  padding: 10px;
+  border-radius: 8px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.result-container.failure {
+  color: #fff; /* Rojo oscuro */
 }
